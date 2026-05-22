@@ -1215,7 +1215,7 @@ p = function(D, P, E, F, v, Q, h, A) {
 
 
 At the end of the execution, the VM calls the main function that prepares the payload with these buffers and generates the token, which is a signature.
-Unlike other BotGuard VM, this VM does not have a fingerprinting system, nor does it perform these error-emitting + writing bytes, and is much simpler and easier to reverse engineer.
+Unlike other BotGuard VM, this VM does not have a fingerprinting system, Google Botguard nor does it perform these error-emitting + writing bytes, and is much simpler and easier to reverse engineer.
 
 ## Disclaimer
 
