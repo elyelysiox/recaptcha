@@ -1084,7 +1084,7 @@ This data is serialized using protobuf (Protocol Buffers), an efficient, neutral
 - ***Crash Source Tab***
     I'm not sure how this can be achieved, but basically when a timeout occurs (in this case due to a setInterval), for about 10-15 seconds, the source tab of devtools will crash
 
-    https://github.com/user-attachments/assets/5756f53a-8aba-4ec9-b374-6792f4f24afc
+    https://github.com/user-attachments/assets/4ae3bf68-5ae7-4adc-a0b9-36cc11b64998
 
 ## reCAPTCHA Botguard
 
