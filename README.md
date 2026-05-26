@@ -1,4 +1,34 @@
 
+# Nstproxy
+### Reliable Proxy Infrastructure for Modern Automation Workflows
+
+<p align="center">
+  <img src="./assets/nstproxy.jpg" />
+</p>
+
+Nstproxy provides enterprise-grade residential and datacenter proxy infrastructure designed for browser automation, large-scale data collection, and high-volume scraping workflows.
+
+## ✨ Why Developers Choose Nstproxy?
+
+- 110M+ Residential & ISP IPs Worldwide
+- Smart Rotation & Sticky Sessions
+- Optimized for Modern Anti-Bot Systems
+- Built for Puppeteer, Playwright & Selenium
+- Scalable Infrastructure for Automation
+- Starting from $0.1/GB
+
+[Nstproxy](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox) helps developers maintain reliable automation workflows with high-quality residential proxy infrastructure built for modern web environments.
+
+👉 Learn more: [Nstproxy Official](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox)
+
+- Telegram: https://t.me/nstproxy
+- Discord: https://discord.gg/5jjWCAmvng
+
+## 🎁 Discount
+
+Use code: `ELYELYSIOX` to get **10% OFF**
+
+
 ## Description
 
 This repository contains a technical analysis of Google's antibot (reCAPTCHA) focusing on:
@@ -647,7 +677,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
   - Description: Integrity hash of render script (truncated)
 
 - **Idx 67** (`array`)
-  - Value: `[width,height,outerHeight,innerWith,innerHeigh,availHeigh]`
+  - Value: `[width,height,outerHeight,innerWidth,innerHeight,availHeight]`
   - Hashed: `false`
   - Description: Screen resolution and dimensions
 
