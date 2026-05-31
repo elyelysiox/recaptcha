@@ -1,34 +1,4 @@
 
-# Nstproxy
-### Reliable Proxy Infrastructure for Modern Automation Workflows
-
-<p align="center">
-  <img src="./assets/nstproxy.jpg" />
-</p>
-
-Nstproxy provides enterprise-grade residential and datacenter proxy infrastructure designed for browser automation, large-scale data collection, and high-volume scraping workflows.
-
-## ✨ Why Developers Choose Nstproxy?
-
-- 110M+ Residential & ISP IPs Worldwide
-- Smart Rotation & Sticky Sessions
-- Optimized for Modern Anti-Bot Systems
-- Built for Puppeteer, Playwright & Selenium
-- Scalable Infrastructure for Automation
-- Starting from $0.1/GB
-
-[Nstproxy](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox) helps developers maintain reliable automation workflows with high-quality residential proxy infrastructure built for modern web environments.
-
-👉 Learn more: [Nstproxy Official](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox)
-
-- Telegram: https://t.me/nstproxy
-- Discord: https://discord.gg/5jjWCAmvng
-
-## 🎁 Discount
-
-Use code: `ELYELYSIOX` to get **10% OFF**
-
-
 ## Description
 
 This repository contains a technical analysis of Google's antibot (reCAPTCHA) focusing on:
@@ -315,14 +285,14 @@ Note: Recaptcha BotGuard was removed `04/01/2026`, You can see some samples [her
     null,
     null,
     null,
-    // Bft Signature, Used in reCAPTCHA V2
+    // Bft Token, Used in reCAPTCHA V2
     "0dAFcWeA4RepD9zDjeMQE73pAT27pXZ7Nz_419U2K36QNqzHaKtLIDkwZQLi-Ud8OvSZHbDEcxQxusBQnsF5QQErMRpJMcUplaFg",
-    1777752103288 
+    1777752103288 // "oc" Data Encryption Key
 ]
 ```
 
 ## Fingerprint
-The values ​​are based on the decrypted values ​​from the first sample fingerprint, look [here](https://github.com/elyelysiox/recaptcha-payload/blob/main/fingerprint/decrypted_values.json)
+The values ​​are based on the decrypted values ​​from the first sample fingerprint, look [here](https://github.com/elyelysiox/recaptcha/blob/main/fingerprint/decrypted_values.json)
 
 Each subfield of the fingerprint values ​​has a base format:
 
@@ -500,7 +470,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 29** (`string`)
   - Value: `e2a3cd70`
   - Hashed: `true`
-  - Description: Hashed grecaptcha.execute function body with SHA-256
+  - Description: Hashed `grecaptcha.execute` function body with SHA-256, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/hashGrecaptchaThenBody.js)
 
 - **Idx 30** (`integer`)
   - Value: `0`
@@ -525,7 +495,8 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 35** (`string`)
   - Value: `0,DIV,f0c7414e`
   - Hashed: `true`
-  - Description: `document.activeElement`, parse if it matches with a regex `(?i)buy|pay|place|order|donate|purchase`, then hash tagName + element ID + classNames, `<isMatched,TagName,Hashed>`
+  - Description: `document.activeElement` Parse if it's a purchase element using a regex `/buy|pay|place|order|donate|purchase/i` with textContent, classNames and id, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/computeActiveElement.js)
+
 
 - **Idx 36** (`string`)
   - Value: `h3`, `h2` or `http/1.1`
@@ -555,7 +526,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 41** (`string`)
   - Value: `DIV,a08cd360`
   - Hashed: `true`
-  - Description: The hovered element where the mouse is positioned, hashed target + all `<INPUT>` elements + `location.url` + `window.scrollY`
+  - Description: The hovered element where the mouse is positioned, hashed tagName, classNames and id, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/computeHoveredElement.js)
 
 - **Idx 42** (`string`)
   - Value: `9,e3b0c442`
@@ -609,7 +580,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 52** (`integer`)
   - Value: `11`
   - Hashed: `false`
-  - Description: `isActive * 10 + hasBeenActive` from `userActivation`
+  - Description: `isActive * 10 + hasBeenActive` from `navigator.userActivation`
 
 - **Idx 53** (`integer`)
   - Value: `4`
@@ -689,7 +660,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 69** (`string`)
   - Value: `09AKhCRwjrDFiHsrRA--o23-HB-eWqOtk_XQ-rLE1...`
   - Hashed: `false`
-  - Description: A session token used for human identification, stored in `window.sessionStorage` and increments the score if valid
+  - Description: A session token used for human identification, stored in the browser cookies and increments the score if valid
 
 - **Idx 70** (`array`)
   - Value: `[null,null,"","",null,"1l0fl"]`
@@ -704,7 +675,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 72** (`array`)
   - Value: `[[["Google Chrome","147"],["Not.A/Brand",...`
   - Hashed: `false`
-  - Description: `userAgentData`, browser version, name
+  - Description: `userAgentData`, Browser/Chromium version and name
 
 - **Idx 73** (`array`)
   - Value: `[[null,2,0,"Mozilla/5.0 (Windows NT 10.0;...`
@@ -721,7 +692,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
   - Hashed: `false`
   - Description: Unix timestamp, sometimes it appears
 
-### VM Signals
+## VM Signals
 The following are the browser values ​​obtained by the internal reCAPTCHA VM, along with the signal key. Some values ​​are not shown in the sample fingerprint because the VM only extracts certain values ​​from the configuration bytecode. Therefore, other values ​​will be displayed. For more details, see [here](https://github.com/elyelysiox/recaptcha-vm)
 
 Base Signal Format:
@@ -869,15 +840,25 @@ null,
 
 - **Key 352** (`array`)
   - Value: `1,[[2050,125,633,266,[609,266,105,44],3,1,50,1,1]],[3,3,318],...`
-  - Description: It contains mouse movements, time, dimensions, positions of pressed elements and biometrics
+  - Description:
+    The structure contains:
 
-    *Base Format*:
+    - Mouse movement timing
+    - Cursor coordinates
+    - Click durations
+    - Pressed element dimensions
+    - Pointer type information
+    - Pressure metrics
+    - Cursor travel distance
+    - Behavioral timing statistics
+
+    ### Base Format:
     ```
     [
       eventsCount,
       mouseEvents,
       [
-        unknownEntropy,
+        coalescedEventsCount,
         averageInterEventDelay,
         timingVarianceScore
       ],
@@ -892,7 +873,11 @@ null,
       behaviorChecksum
     ]
     ```
-    *Mouse Event*:
+    
+    ### Mouse Event Structure:
+    
+    Each entry inside mouseEvents follows this structure:
+    
     ```
     [
       timestamp,
@@ -906,12 +891,72 @@ null,
         elementHeight
       ],
       elementTagType,
-      pointerType,
+      trackedElementIndex,
       pressure,
       pointerTravelDistance,
       pointerArea
     ]
     ```
+
+    | Name | Description |
+    |---|---|
+    | `timestamp` | Event timestamp relative to event start |
+    | `clickDuration` | Duration between `pointerdown` and `pointerup` |
+    | `clientX` | ... |
+    | `clientY` | ... |
+    | `elementBounds` | Bounding rectangle of the interacted element |
+    | `elementTagType` | Encoded DOM tag identifier of the interacted element |
+    | `trackedElementIndex` | Internal identifier of the interacted DOM element from the runtime interaction map |
+    | `pressure` | Normalized pointer pressure value multiplied by `100` |
+    | `pointerTravelDistance` | Distance traveled between `pointerdown` and `pointerup` |
+    | `pointerArea` | Contact area computed as `width * height` |
+
+    ### Element Tag Type
+
+    This is initialized during the execution of reCAPTCHA VM
+
+    | Type      | ID |
+    |-----------|----|
+    | `BODY`    | 1  |
+    | `INPUT`   | 2  |
+    | `BUTTON`  | 3  |
+    | `SELECT`  | 4  |
+    | `TEXTAREA`| 5  |
+    | `FORM`    | 6  |
+    | `A`       | 7  |
+    | `AREA`    | 8  |
+    | `AUDIO`   | 9  |
+    | `VIDEO`   | 10 |
+    | `IFRAME`  | 11 |
+    | `DIV`     | 12 |
+    | `SPAN`    | 13 |
+    | `LABEL`   | 14 |
+
+    ### Example
+    ```
+    [
+      18342,
+      91,
+      742,
+      381,
+      [700, 320, 120, 38],
+      3,
+      1,
+      50,
+      1.4,
+      16
+    ]
+    ```
+    
+    Represents:
+    
+    - event at `18.342s`
+    - click duration of `91ms`
+    - click at `(742, 381)`
+    - interaction with a `BUTTON`
+    - pointer pressure `0.5` (50)
+    - slight cursor movement during click
+    - pointer contact area of `16`
 
 - **Key 360** (`string`)
   - Value: `""`
@@ -987,121 +1032,403 @@ This data is serialized using protobuf (Protocol Buffers), an efficient, neutral
 ]
 ```
 
-### Components
+# Components
 
-- **Idx 1**
-    reCAPTCHA Version
+| Index | Value | Description |
+|---|---|---|
+| `0` | `rreq` | Request type identifier |
+| `1` | `U5VsmTDhJM1iO...` | reCAPTCHA Version |
+| `2` | `03AFcWeA5Els3...` | Validation token obtained from the `/anchor` endpoint |
+| `5` | `-383788762` | Hashed the entire serialized fingerprint payload, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/hashFingerprint.js) |
+| `6` | `q` | Indicates the challenge or request mode being executed |
+| `7` | `05APQrAobTCFG...` | Usage Patterns, containing usage history and previously solved challenge patterns. Can significantly increase the score if valid |
+| `8` | `submit` | Specific Site action the user is performing on the page at the time of verification (e.g `signin`, `register`) |
+| `14` | `6LcAbwIqAAAA...` | Website Key |
+| `16` | `0XA4cHhALxgM...` | Encrypted the entire serialized fingerprint payload with the encryption key from anchor (index 18) `1777669303203` |
+| `20` | `tbMywxNTQsOD...` | Base64-encoded telemetry structure containing VM timing deltas, resource timings, collected browser object statistics and website script urls |
+| `21` | `0aAPQrAobqME...` | Token associated with a previously solved CAPTCHA. Used for session continuity and trust correlation |
+| `22` | `BDAAYAIAGEcA...` | Hashed all brower objects keys |
+| `25` | `W1tbNTAwNiw...` | Base64-encoded counters for user interaction events such as mouse movement, clicks, keyboard and focus changes |
 
-- **Idx 2**
-    Anchor Token for Validation
 
-- **Idx 5**
-    Hashed the entire serialized fingerprint data, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/hashFingerprint.js)
+# Challenge Modes
 
-- **Idx 6**
-    Type
+| Value | Description |
+|---|---|
+| `q` | reCAPTCHA V3 challenge |
+| `fi` | reCAPTCHA V2/Invisible challenge |
+| `a` | Audio challenge |
+| `qr` | Quick-response (new) |
 
-    `q` → V3 Challenge
-  
-    `fi` → V2/Invisible Challenge
-  
-    `a` → Audio Challenge
-  
-    `qr` → Quick Response Code (new)
+# Telemetry Payload (`Idx 20`)
 
-- **Idx 7**
-    Usage patterns, contains patterns from previously solved captchas, can significantly increase the score if valid
+To decode:
 
-- **Idx 8**
-    Action
+```javascript
+atob("W1tbMywwLDgyOV0sWzEs...")
+// → [[[3,0,829],[1,42,863]],[[2,727,1341.300000011921]...
+```
 
-- **Idx 14**
-    Website Key
+The payload contains:
 
-- **Idx 16**
-    Encrypted the entire serialized fingerprint data with the encryption key from anchor 
-    
-- **Idx 20**
-    VM Delta Timing, Telematry, Website Scripts Urls and Collected Browser Objects Length + Elapsed. It's Base64-Encoded, need to add "W1" at the beginning to decode it
+- Resource timing information
+- Long-task performance timing
+- reCAPTCHA VM execution deltas
+- Website script URLs
+- Browser object collection statistics
 
-    ```javascript
-    atob("W1tbMywwLDgyOV0sWzEs...")
-    // → [[[3,0,829],[1,42,863]],[[2,727,1341.300000011921]...
-    ```
+### Base Structure
 
-    *Base Format*:
-    ```
+```js
+[
+  [recaptchaResources],
+  [tasksTiming],
+  [
+      null,
+      null,
+      null,
+      idleTimeoutDelta,
+      deltaTiming,
+      0,
+      0,
+      0,
+  ],
+  websiteScriptsUrls,
+  [collectionElapsed, browserObjectsLength]
+]
+```
+
+### Long Task Timing Format
+
+```js
+[
+   PerformanceLongTaskTiming.name == "self" ? 2 : 4,
+   PerformanceLongTaskTiming.duration,
+   PerformanceLongTaskTiming.startTime
+]
+```
+
+### reCAPTCHA Resource Timing Format
+
+```js
+[
+   resourceType,
+   duration,
+   startTime
+]
+```
+
+| Resource | Type |
+|---|---|
+| `recaptcha/api.js` | `3` |
+| `recaptcha/releases/<version>` | `1` |
+| `https://www.google.com/recaptcha/api2/anchor` | `2` |
+| `https://www.google.com/recaptcha/api2/bframe` | `4` |
+
+---
+
+# Event Counters (`Idx 25`)
+
+This field contains Base64-encoded counters for browser interaction events collected during execution
+
+Decoded example:
+
+```js
+[
+  [
+    [5006, 43],
+    [64607, 1],
+    [45464, 1],
+    [35837, 1]
+  ]
+]
+```
+
+### Event Counter Structure
+
+```js
+[
+  [
+    [eventType, count]
+  ]
+]
+```
+
+
+### Known Event Hashes
+
+| Hash | Event Type |
+|---|---|
+| `5006` | `pointermove` |
+| `64607` | `pointerdown` |
+| `45464` | `pointerup` |
+| `31617` | `keydown` |
+| `37178` | `keyup` |
+| `35837` | `focusin` |
+
+## Response Structure
+
+```js
+[
+    "rresp",
+    "<responseToken>",
+    null,
+    120,
     [
-      [recaptchaResources],
-      [tasksTiming],
-      [
-          null,
-          null,
-          null,
-          idleTimeoutDelta,
-          deltaTimming
-          0,
-          0,
-          0,
-      ],
-      websiteScriptsUrls,
-      [collectionElapsed, browserObjectsLength]
-    ]
-    ```
+        "pmeta",
+        [
+            "/m/013xlm",
+            null,
+            3,
+            3,
+            3,
+            null,
+            "Tractor"
+        ],
+        null,
+        [1]
+    ],
+    "<challengeType>",
+    null,
+    null,
+    "<usagePatternToken>",
+    "<challengeImageToken>",
+    null,
+    null,
+    "<humanVerificationToken>",
+    null,
+    "<captchaSessionToken>",
+    "<bftToken>",
+    0
+]
+```
 
-    *TaskTimimg*:
+## Field Descriptions
 
-    ```
+| Index | Name | Description |
+|---|---|---|
+| `0` | `rresp` | Response type identifier returned by the reload endpoint |
+| `1` | `responseToken` | reCAPTCHA response token |
+| `3` | `tokenExpiration` | Token lifetime in seconds before expiration |
+| `4` | `pmeta` | Challenge metadata block containing information about the CAPTCHA type, category, and grid layout |
+| `5` | `challengeType` | Type of CAPTCHA challenge |
+| `8` | `usagePatternToken` | Usage Patterns, stored in `window.sessionStorage` and reused in future `/reload` requests |
+| `9` | `challengeImageToken` | Token used to retrieve the CAPTCHA image payload from the `/payload` endpoint |
+| `12` | `humanVerificationToken` | Human identification token associated with Google reCAPTCHA state and browser cookies |
+| `14` | `captchaSessionToken` | Internal session token |
+| `15` | `bftToken` | ... |
+
+---
+
+### `pmeta` Structure
+
+Example:
+
+```js
+[
+    "pmeta",
     [
-       PerformanceLongTaskTiming.name == "self" ? 2 : 4,
-       PerformanceLongTaskTiming.duration,
-       PerformanceLongTaskTiming.startTime
-    ]
-    ```
+        "/m/013xlm",
+        null,
+        3,
+        3,
+        3,
+        null,
+        "Tractor"
+    ],
+    null,
+    [1]
+]
+```
 
-    *reCAPTCHA Resource*:
+### `pmeta[1]` Values
 
-    ```
-    [
-       resourceType,
-       duration,
-       startTime
-    ]
-    ```
+| Position | Value | Description |
+|---|---|---|
+| `0` | `/m/013xlm` | Internal category identifier for the target object class |
+| `2` | `3` | Number of grid columns |
+| `3` | `3` | Number of grid row |
+| `5` | `null` | Reserved or optional metadata field |
+| `6` | `"Tractor"` | Text label |
 
-    | Resource | Type |
-    |---|---|
-    | `recaptcha/api.js` | 3 |
-    | `recaptcha/releases/<version>` | 1 |
-    | `https://www.google.com/recaptcha/api2/anchor` | 2 |
-    | `https://www.google.com/recaptcha/api2/bframe` | 4 |
+---
 
-- **Idx 21**
-    Token from the previous captcha solved
+### Challenge Types
 
-- **Idx 22**
-    Hashed all brower objects keys
+| Type | Description |
+|---|---|
+| `imageselect` | Standard image selection CAPTCHA |
+| `tileselect` | Tile-based dynamic image challenge |
+| `dynamic` | Dynamic challenge where tiles reload after selection |
+| `multicaptcha` | Multi-step CAPTCHA challenge |
+| `audio` | Audio-based accessibility challenge |
+| `nocaptcha` | Checkbox-only verification flow |
+| `doscaptcha` | Deny CAPTCHA if there is abuse |
 
-- **Idx 25**
-    Count of `pointermove`, `pointerdown`, `pointerup`, `keydown`, `keyup`, `focusin` events in Base64-Encoded The values `​​5006`, `64607`, etc. are the hashed names of the event types
+---
 
-    | Hashed | Type |
-    |---|---|
-    | `5006` | pointermove |
-    | `64607` | pointerdown |
-    | `45464` | pointerup |
-    | `31617` | keydown |
-    | `37178` | keyup |
-    | `35837` | focusin |
+### Challenge Image Retrieval
 
-  *Base Format*:
-    ```
-    [[
-      [eventType, Count],
-    ]]
-    ```
+The value at `Idx 9` (`challengeImageToken`) is used to retrieve the CAPTCHA image:
+
+```txt
+https://www.google.com/recaptcha/<type>/payload
+    ?p=<challengeImageToken>
+    &k=<websiteKey>
+```
 
 
+### Category Identifiers
+
+| ID | Category |
+|---|---|
+| `/m/0pg52` | Taxi |
+| `/m/01bjv` | Bus |
+| `/m/02yvhj` | School bus |
+| `/m/04_sv` | Motorcycle |
+| `/m/013xlm` | Tractor |
+| `/m/01jk_4` | Chimney |
+| `/m/014xcs` | Crosswalk |
+| `/m/015qff` | Traffic light |
+| `/m/0199g` | Bicycle |
+| `/m/015qbp` | Parking meter |
+| `/m/0k4j` | Car |
+| `/m/015kr` | Bridge |
+| `/m/019jd` | Boat |
+| `/m/0cdl1` | Palm tree |
+| `/m/09d_r` | Mountain / hill |
+| `/m/01pns0` | Fire hydrant |
+| `/m/01lynh` | Stairs |
+
+## UserVerify Request Payload
+The `/userverify` payload is submitted after the user completes a reCAPTCHA v2 image challenge
+
+# Payload Structure
+
+```
+v: hsFBb1u5wWWWkWP4in1ua2cQ
+c: 03AFcWeA5RIHz5mI2COQqTcLjdrC7FiPpdfkX-hB-B2iFenI...
+response: eyJyZXNwb25zZSI6WzMsMSw0LDksMCwxMSwxMCwxMywxNF0....
+t: 24521
+ct: 24521
+ch: -4007845
+oc: 0ZpqzzPgYKEEaN0xpfo3v_voeVUySZK3Ktf_fLVRdhnu3yeTy4BhO...
+pm: 51bGwsbnVsbCxbbnVsbCxudWxsLG51bGwsWzEwLDQuMjcwMDAwMD....
+```
+
+## Components
+
+| Field | Name | Description |
+|---|---|---|
+| `v` | `recaptchaVersion` | reCAPTCHA Version |
+| `c` | `challengeToken` | Challenge state token returned from `/replaceimage` or a previous `/userverify` request |
+| `response` | Encoded payload containing the selected tile indices and additional interaction metadata |
+| `t` | `challengeElapsed` | Elapsed time since the challenge was initially loaded |
+| `ct` | `completionTime` | Total time taken by the user to solve and submit the CAPTCHA |
+| `ch` | `ocHash` | Hashed the entire serialized `oc` payload, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/hashOC.js) |
+| `oc` | `encryptedVmSignals` | Encrypted signals collected from the reCAPTCHA VM, see [here](#vm-signals). |
+| `pm` | `telemetryPayload` | Base64-encoded telemetry structure containing VM timing deltas, resource timings, collected browser object statistics, and website script metadata |
+
+### `response` Payload
+Represents the indices/positions of the squares selected by the user in the grid
+
+The payload is later encoded as JWT before submission
+
+---
+
+### 3×3 Grid Example
+
+![grid33](https://github.com/elyelysiox/recaptcha/blob/main/photos/2141241242532.png)
+
+```txt
+0 1 2
+3 4 5
+6 7 8
+```
+
+Example payload:
+
+```json
+{
+  "response": [2, 3, 6]
+}
+```
+
+---
+
+### 4×4 MultiCaptcha Grid Example
+
+![grid44](https://github.com/elyelysiox/recaptcha/blob/main/photos/4214891248124.png)
+
+```txt
+ 0  1  2  3
+ 4  5  6  7
+ 8  9 10 11
+12 13 14 15
+```
+
+Example payload:
+
+```json
+{
+  "response": [2, 3, 6, 14]
+}
+```
+
+### `e` Field
+
+The `response` payload may also include an `e` field:
+
+```json
+{
+  "response": [2, 3, 6, 14],
+  "e": "bxCoiXVt49I7CTS_tNlVbGg"
+}
+```
+
+This field contains encrypted interaction metadata related to CAPTCHA button actions such as:
+
+- `Verify`
+- `Next`
+- `Skip`
+
+### Internal Structure of `e`
+
+After decryption, the structure resembles:
+
+```txt
+[[["9ffd9672"]]]
+```
+
+Each value represents a hashed identifier for the `rc-button-default` button class/action
+
+The hash is:
+
+- SHA-256-based
+- Truncated to 8 characters
+
+Longer interaction sequences may look like:
+
+```txt
+[
+  [
+    ["9ffd9672"],
+    ["9ffd9672"],
+    ["9ffd9672"],
+    ["9ffd9672"]
+  ]
+]
+```
+
+### `oc` — Encrypted VM Signals
+
+Uses the same encryption algorithm as the `idx 16` field of the `/reload` request payload, with the encryption key loaded in the anchor (index 31) `1777752103288`
+
+### `pm` — Telemetry Payload
+
+The `pm` field contains a Base64-encoded telemetry structure similar to the telemetry payload used in `/reload`.
+
+ 
 ## Anti-debugging/Tampering
 - ***Symbol-based Integrity Tag***
     reCAPTCHA set a Symbol key `Symbol(jas)` to every array and object with a numeric value used as an integrity check. Since Symbols are non-enumerable and invisible to standard cloning operations (like JSON.stringify), any attempt to replace or clone these structures loses the tag, which reCAPTCHA detects as tampering
@@ -1111,10 +1438,19 @@ This data is serialized using protobuf (Protocol Buffers), an efficient, neutral
 - ***Closure Variable Capture***
     Some values ​​are intentionally scoped in an outer function and consumed only inside nested callbacks or closures, the variable never exists in the same scope where it is used
 
+- ***Timing Checks***
+    reCAPTCHA incorporates runtime debugging detection mechanisms. If it detects that the code is being analyzed by a debugger, it restarts the debugging session, causing the execution state and context to be lost
+
 - ***Crash Source Tab***
-    I'm not sure how this can be achieved, but basically when a timeout occurs (in this case due to a setInterval), for about 10-15 seconds, the source tab of devtools will crash
 
     https://github.com/user-attachments/assets/4ae3bf68-5ae7-4adc-a0b9-36cc11b64998
+  
+    This bug occurs in browsers that use Chromium. There are several bugs that cause the browser or developer tools to close unexpectedly, such as the one shown here:
+    
+    https://blog.castle.io/detect-and-crash-chromium-bots-with-one-weird-trick-bots-hate-it/ 
+    https://issues.chromium.org/issues/340836884?ref=blog.castle.io
+    
+    Therefore, one of these bugs is most likely triggered when the timeout occurs, as it's probably not something that would happen in a real user's flow
 
 ## reCAPTCHA Botguard
 
@@ -1246,6 +1582,38 @@ p = function(D, P, E, F, v, Q, h, A) {
 
 At the end of the execution, the VM calls the main function that prepares the payload with these buffers and generates the token, which is a signature.
 Unlike other BotGuard VM, this VM does not have a fingerprinting system, Google Botguard nor does it perform these error-emitting + writing bytes, and is much simpler and easier to reverse engineer.
+
+
+# Nstproxy
+### Reliable Proxy Infrastructure for Modern Automation Workflows
+
+<p align="center">
+  <img src="./assets/nstproxy.jpg" />
+</p>
+
+Nstproxy provides enterprise-grade residential and datacenter proxy infrastructure designed for browser automation, large-scale data collection, and high-volume scraping workflows.
+
+## ✨ Why Developers Choose Nstproxy?
+
+- 110M+ Residential & ISP IPs Worldwide
+- Smart Rotation & Sticky Sessions
+- Optimized for Modern Anti-Bot Systems
+- Built for Puppeteer, Playwright & Selenium
+- Scalable Infrastructure for Automation
+- Starting from $0.1/GB
+
+[Nstproxy](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox) helps developers maintain reliable automation workflows with high-quality residential proxy infrastructure built for modern web environments.
+
+👉 Learn more: [Nstproxy Official](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox)
+
+- Telegram: https://t.me/nstproxy
+- Discord: https://discord.gg/5jjWCAmvng
+
+## 🎁 Discount
+
+Use code: `ELYELYSIOX` to get **10% OFF**
+
+
 
 ## Disclaimer
 
