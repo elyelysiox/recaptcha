@@ -1,4 +1,35 @@
 
+# Nstproxy
+### Reliable Proxy Infrastructure for Modern Automation Workflows
+
+<p align="center">
+  <img src="./assets/nstproxy.jpg" />
+</p>
+
+Nstproxy provides enterprise-grade residential and datacenter proxy infrastructure designed for browser automation, large-scale data collection, and high-volume scraping workflows.
+
+## ✨ Why Developers Choose Nstproxy?
+
+- 110M+ Residential & ISP IPs Worldwide
+- Smart Rotation & Sticky Sessions
+- Optimized for Modern Anti-Bot Systems
+- Built for Puppeteer, Playwright & Selenium
+- Scalable Infrastructure for Automation
+- Starting from $0.1/GB
+
+[Nstproxy](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox) helps developers maintain reliable automation workflows with high-quality residential proxy infrastructure built for modern web environments.
+
+👉 Learn more: [Nstproxy Official](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox)
+
+- Telegram: https://t.me/nstproxy
+- Discord: https://discord.gg/5jjWCAmvng
+
+## 🎁 Discount
+
+Use code: `ELYELYSIOX` to get **10% OFF**
+
+---
+
 ## Description
 
 This repository contains a technical analysis of Google's antibot (reCAPTCHA) focusing on:
@@ -1582,37 +1613,6 @@ p = function(D, P, E, F, v, Q, h, A) {
 
 At the end of the execution, the VM calls the main function that prepares the payload with these buffers and generates the token, which is a signature.
 Unlike other BotGuard VM, this VM does not have a fingerprinting system, Google Botguard nor does it perform these error-emitting + writing bytes, and is much simpler and easier to reverse engineer.
-
-
-# Nstproxy
-### Reliable Proxy Infrastructure for Modern Automation Workflows
-
-<p align="center">
-  <img src="./assets/nstproxy.jpg" />
-</p>
-
-Nstproxy provides enterprise-grade residential and datacenter proxy infrastructure designed for browser automation, large-scale data collection, and high-volume scraping workflows.
-
-## ✨ Why Developers Choose Nstproxy?
-
-- 110M+ Residential & ISP IPs Worldwide
-- Smart Rotation & Sticky Sessions
-- Optimized for Modern Anti-Bot Systems
-- Built for Puppeteer, Playwright & Selenium
-- Scalable Infrastructure for Automation
-- Starting from $0.1/GB
-
-[Nstproxy](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox) helps developers maintain reliable automation workflows with high-quality residential proxy infrastructure built for modern web environments.
-
-👉 Learn more: [Nstproxy Official](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox)
-
-- Telegram: https://t.me/nstproxy
-- Discord: https://discord.gg/5jjWCAmvng
-
-## 🎁 Discount
-
-Use code: `ELYELYSIOX` to get **10% OFF**
-
 
 
 ## Disclaimer
