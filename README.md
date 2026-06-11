@@ -518,6 +518,28 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
   - Hashed: `false`
   - Description: Referrer URL `document.referrer`
 
+- **Idx 33** (`integer`)
+  - Value: `2`
+  - Hashed: `false`
+  - Description: Element of the reCAPTCHA box where rendering is done.
+  
+    ```js
+    // like grecaptcha.execute('.grecaptcha') -> this div
+    // Basically, it returns a number or the depth or level of that div in the document.
+    
+    // Example: html > body > main > form > fieldset > div.recaptcha.form-field
+    // 5 4 3 2 1 0
+    // out = 5
+
+    nM = document.getElementsByClassName('grecaptcha-badge')[0] // or document.getElementsByClassName('g-recaptcha')[0] v2
+    let count = 0;
+    for (; nM = nM.parentElement || null;) {
+      count++;
+    }
+    
+    const result = count;
+    ```
+
 - **Idx 34** (`string`)
   - Value: `AAAAAAAAAA`
   - Hashed: `true`
