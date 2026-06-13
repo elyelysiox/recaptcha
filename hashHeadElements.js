@@ -144,15 +144,9 @@ class BitHash {
   }
 }
 
-function shouldIncludeNode(candidateNode, releaseToken, totalDomNodes) {
+function shouldIncludeNode(candidateNode, releaseToken) {
   if (!candidateNode || candidateNode.nodeType === Node.TEXT_NODE) {
     return false;
-  }
-
-  if (totalDomNodes > 200) {
-    if (Math.random() < 0.05) {
-      return false;
-    }
   }
 
   const subtreeMarkup = candidateNode.innerHTML || "";
@@ -186,12 +180,7 @@ function shouldIncludeNode(candidateNode, releaseToken, totalDomNodes) {
   return true;
 }
 
-function collectTargetNodes(
-  traversalRoot,
-  filterCallback,
-  releaseToken,
-  totalDomNodes,
-) {
+function collectTargetNodes(traversalRoot, filterCallback, releaseToken) {
   const discoveredNodes = [];
 
   function recursiveWalk(currentNode) {
@@ -200,7 +189,7 @@ function collectTargetNodes(
       nestedNode;
       nestedNode = nestedNode.nextSibling
     ) {
-      if (filterCallback(nestedNode, releaseToken, totalDomNodes)) {
+      if (filterCallback(nestedNode, releaseToken)) {
         discoveredNodes.push(nestedNode);
       }
 
@@ -264,13 +253,10 @@ function hashHeadElements(releaseVersion = CAPTCHA_RELEASE) {
     return "";
   }
 
-  const domNodeCount = countDomElements(document);
-
   const filteredNodes = collectTargetNodes(
     documentHead,
     shouldIncludeNode,
     releaseVersion,
-    domNodeCount,
   );
 
   const bitHasher = new BitHash(240, 7, 25);
