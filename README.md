@@ -667,7 +667,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
   - Hashed: `false`
   - Description: It takes the current website URL, converts it to a character array, truncates it to 100 characters, and then converts it back to a string, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/locationLengthParity.js)
 
-    Then it's 5 if the length of that truncated string is even, or 4 if it's odd `window.document.length % 2 == 0 ? 5 : 4`
+    Then it's 5 if the length of that truncated string is even, or 4 if it's odd.
 
 - **Idx 54** (`boolean`)
   - Value: `false`
