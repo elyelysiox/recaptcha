@@ -471,8 +471,6 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 ]
 ```
 
-
-
 ### Signals
 
 - **Idx 4** (`string`)
@@ -494,6 +492,11 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
   - Description: 40-char base64 Bloom filter fingerprint of all `<HEAD>` nodes. Walks each child element collecting tag names, attributes, and text content, serialized and run through a djb2 hash.
 
     Each digest is fed into a `BitHash(240 bits, 7 rounds, max 25 nodes)` that sets bits across a 40×6 grid, then encodes each 6-bit segment as a base64 char. reCAPTCHA's own script tags are excluded via a dynamic regex on src.
+
+- **Idx 18** (`string`)
+  - Value: `a2hyNTFuNDI4NnA3`
+  - Hashed: `false`
+  - Description: Randomly generated value encoded in Base64
 
 - **Idx 27** (`string`)
   - Value: `location.origin`
@@ -702,7 +705,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 59** (`string`)
   - Value: `""`
   - Hashed: `false`
-  - Description: `window.name`
+  - Description: Name of the navigation context of a window or tab `window.name`
 
 - **Idx 60** (`string`)
   - Value: `https://www.kogama.com,https://www.google.com,https://js.stripe.com`
@@ -799,6 +802,16 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
   - Value: `""`
   - Hashed: `false`
   - Description: Google GA cookie, may appear if the website uses Google Tag Manager.
+
+---
+
+Certain reCAPTCHA signals may be unavailable or fail to be collected (due to debugging-related timeouts). In such cases, the missing signal is filled with a randomly generated base64-encoded value. For example:
+
+```
+["CMXZyamk3ZHNjdGsyaQ==", 3249, 591]
+```
+
+Once the fingerprint construction is complete, it is serialized into a string and encrypted using the encryption key loaded from the anchor field (index 18). The encrypted result is then stored in the index `16` field of the `/reload` payload.
 
 ## VM Signals
 The following are the browser values ​​obtained by the internal reCAPTCHA VM, along with the signal key. Some values ​​are not shown in the sample fingerprint because the VM only extracts certain values ​​from the configuration bytecode. Therefore, other values ​​will be displayed. For more details, see [here](https://github.com/elyelysiox/recaptcha-vm)
@@ -945,6 +958,16 @@ null,
     | `range` | 17 |
 
     ### Behavior CheckSum Algorithm
+    
+    The behaviorChecksum is a compact behavioral score derived from the collected user interactions data.
+ 
+    For each interaction:
+    - The interaction index is incremented by one
+    - The timestamp is combined with the adjusted interaction index
+    - The element hash is reduced using a modulo operation
+    - The result is accumulated into a running score
+   
+    ---
 
     ```javascript
     function computePressedElementsChecksum(pressedElementsArray) {
@@ -964,8 +987,6 @@ null,
       const modTerm = accumulator % 10;
       const behaviorChecksum = Math.floor(logTerm + modTerm);
     
-      pressedElementsArray[3] = behaviorChecksum;
-      console.log(behaviorChecksum);
       return JSON.stringify(pressedElementsArray);
     }
 
@@ -988,11 +1009,16 @@ null,
 
 - **Key 959** (`array`)
   - Value: `[[[0,0,979]],1,0]`
-  - Description: Scroll movements, in the format `[[[scrollX,scrollY,timestamp]],count,behaviorChecksum]`
+  - Description: Contains scroll movements collected during the page session
+ 
+    ### Base Format
+    ```
+    [ [ [ scrollX, scrollY, timestamp ] ], count, behaviorChecksum ]
+    ```
 
 - **Key 895** (`array`)
   - Value: `[[[1,0]]]`
-  - Description: VisibilityStateEntry, check if the user left the page, in the format `[[[isVisible,startTime]]]`
+  - Description:` VisibilityStateEntry` tracks page visibility status, indicating whether the user is currently viewing the page or has navigated away, in the format `[[[isVisible, startTime]]]`
 
 - **Key 1092** (`array`)
   - Value: `[886,2300,262.2099999997952,392.7600000009595,2050.2399999993577]`
@@ -1131,7 +1157,26 @@ null,
     - pointer contact area of `16`
    
     ### Behavior CheckSum Algorithm
+ 
+    For each mouse event:
 
+    - The click duration is amplified
+    - The result is combined with the event timestamp
+    - Cursor coordinates and element dimensions are mixed together
+    - A weighted ratio is computed
+    - The ratio is rounded and accumulated
+    
+    After all events are processed:
+    
+    - The accumulated score is combined with total cursor distance
+    - The result is normalized using the number of collected points
+    - A logarithmic transformation is applied
+    - Additional movement statistics are incorporated
+    - The final value is reduced using a modulo operation
+    - The result is rounded into a small integer score
+    
+    ---
+    
     ```javascript
     function computeMouseBehaviorChecksum(mouseDataArray) {
       let totalSum = 0;
