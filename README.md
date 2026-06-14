@@ -624,7 +624,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 47** (`integer`)
   - Value: `0`
   - Hashed: `false`
-  - Description: `window.getSelection().length || 0`
+  - Description: Returns the length of the text currently selected on the page by the user `window.getSelection().toString().length || 0`
 
 - **Idx 49** (`string`)
   - Value: `h2-0`
@@ -665,12 +665,14 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 53** (`integer`)
   - Value: `4`
   - Hashed: `false`
-  - Description: `window.document.length % 2 == 0 ? 5 : 4`
+  - Description: It takes the current website URL, converts it to a character array, truncates it to 100 characters, and then converts it back to a string, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/locationLengthParity.js)
+
+    Then it's 5 if the length of that truncated string is even, or 4 if it's odd `window.document.length % 2 == 0 ? 5 : 4`
 
 - **Idx 54** (`boolean`)
   - Value: `false`
   - Hashed: `false`
-  - Description: `window.document.hidden`
+  - Description: It indicates whether the document is hidden from the user, that is, whether it is not visible on the screen, `window.document.hidden`
 
 - **Idx 55** (`array`)
   - Value: `[[[1,"2v"],[1,"9z"],[1,"z8"],[1,"us"],[1,..`
@@ -773,7 +775,15 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 72** (`array`)
   - Value: `[[["Google Chrome","147"],["Not.A/Brand",...`
   - Hashed: `false`
-  - Description: `userAgentData`, Browser/Chromium version and name.
+  - Description: Array of userAgent data `navigator.userAgentData` a flag indicating if it is mobile and the platform, Sample:
+
+    ```javascript
+    [
+      navigator.userAgentData.brands.map(b => [b.brand, b.version]),
+      navigator.userAgentData.mobile ? 1 : 0,
+      navigator.userAgentData.platform
+    ]
+    ```
 
 - **Idx 73** (`array`)
   - Value: `[[null,2,0,"Mozilla/5.0 (Windows NT 10.0;...`
@@ -781,12 +791,12 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
   - Description: VM Encrypted Signals.
 
 - **Idx 77** (`integer`)
-  - Value: `""`
+  - Value: `null`
   - Hashed: `false`
   - Description: Unix timestamp, sometimes it appears.
 
 - **Idx 78** (`string`)
-  - Value: `null`
+  - Value: `""`
   - Hashed: `false`
   - Description: Google GA cookie, may appear if the website uses Google Tag Manager.
 
