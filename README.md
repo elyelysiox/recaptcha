@@ -920,11 +920,75 @@ null,
 
 - **Key 659** (`array`)
   - Value: `[[[0,921],[1,2053]],[[235054,1,1,1],[164277,3,4,1]],2,39]`
-  - Description: Contains data of the pressed elements on the page in the format `[[[count,ts]],[[hashedElem,tagType,type,autoComplete]],pressedCount,behaviorChecksum]`
+  - Description: Contains data of the pressed elements on the page in the format `[[[count,timestamp]],[[hashedElem,tagType,type,autoComplete]],pressedCount,behaviorChecksum]`
+ 
+    ### Element Type
+    
+    | Element Type | ID |
+    |-------------|----|
+    | `""` | 1 |
+    | `text` | 2 |
+    | `button` | 3 |
+    | `submit` | 4 |
+    | `checkbox` | 5 |
+    | `email` | 6 |
+    | `password` | 7 |
+    | `select-one` | 8 |
+    | `select-multiple` | 9 |
+    | `radio` | 10 |
+    | `textarea` | 11 |
+    | `file` | 12 |
+    | `tel` | 13 |
+    | `number` | 14 |
+    | `date` | 15 |
+    | `reset` | 16 |
+    | `range` | 17 |
+
+    ### Behavior CheckSum Algorithm
+
+    ```javascript
+    function computePressedElementsChecksum(pressedElementsArray) {
+      let accumulator = 0;
+    
+      for (const [countTimestampPair, elementInfo] of zip(
+        pressedElementsArray[0],
+        pressedElementsArray[1],
+      )) {
+        const shiftedTimestamp = countTimestampPair[0] + 1;
+        const baseValue = countTimestampPair[1] + shiftedTimestamp;
+        const remainder = elementInfo[0] % baseValue;
+        accumulator = remainder + accumulator;
+      }
+    
+      const logTerm = Math.log(accumulator + 1) * 4;
+      const modTerm = accumulator % 10;
+      const behaviorChecksum = Math.floor(logTerm + modTerm);
+    
+      pressedElementsArray[3] = behaviorChecksum;
+      console.log(behaviorChecksum);
+      return JSON.stringify(pressedElementsArray);
+    }
+
+    function zip(a, b) {
+      const length = Math.min(a.length, b.length);
+      const result = [];
+      for (let i = 0; i < length; i++) {
+        result.push([a[i], b[i]]);
+      }
+      return result;
+    }
+    ```
+
+    ### Example
+
+    ```javascript
+    const checksum = computePressedElementsChecksum([[[0,921],[1,2053]],[[235054,1,1,1],[164277,3,4,1]],2,39]);
+    console.log(checksum); // → 39
+    ```
 
 - **Key 959** (`array`)
   - Value: `[[[0,0,979]],1,0]`
-  - Description: Scroll movements, in the format `[[[scrollX,scrollY,ts]],count,behaviorChecksum]`
+  - Description: Scroll movements, in the format `[[[scrollX,scrollY,timestamp]],count,behaviorChecksum]`
 
 - **Key 895** (`array`)
   - Value: `[[[1,0]]]`
@@ -1065,6 +1129,48 @@ null,
     - pointer pressure `0.5` (50)
     - slight cursor movement during click
     - pointer contact area of `16`
+   
+    ### Behavior CheckSum Algorithm
+
+    ```javascript
+    function computeMouseBehaviorChecksum(mouseDataArray) {
+      let totalSum = 0;
+    
+      for (let i = 0; i < mouseDataArray[1].length; i++) {
+        const event = mouseDataArray[1][i];
+    
+        const scaledClickDuration = event[1] * 4;
+        const xPlusScaledDuration = event[0] + scaledClickDuration;
+        const combinedElementDims = event[2] + event[4][2] + event[4][1]; // clientY + elementWidth + elementTop
+        const product = xPlusScaledDuration * combinedElementDims;
+        const divisor = event[3] + event[4][3] + event[4][0] + 1; // elementTagType + elementHeight + elementLeft + 1
+        const roundedValue = Math.round(product / divisor);
+    
+        console.log(roundedValue);
+        totalSum += roundedValue;
+      }
+    
+      const summaryArray = mouseDataArray[3]; // [totalPoints, clickSequenceScore, totalCursorDistance, totalPoints]
+      const sumPlusCursorDistance = totalSum + summaryArray[2];
+      const totalPointsPlusOne = summaryArray[0] + 1;
+      const ratio = sumPlusCursorDistance / totalPointsPlusOne;
+      const ratioPlusOne = ratio + 1;
+      const logRatio = Math.log(ratioPlusOne);
+      const scaledLog = logRatio * 4;
+      const ratioPlusTotalPoints = ratio + summaryArray[0];
+      const ratioPlusTotalPointsPlusScore = ratioPlusTotalPoints + summaryArray[1];
+      const modResult = ratioPlusTotalPointsPlusScore % 11;
+      const behaviorChecksum = Math.round(scaledLog + modResult);
+      return JSON.stringify(mouseDataArray);
+    }
+    ```
+
+    ### Example
+
+    ```javascript
+    const checksum = computeMouseChecksum([1,[[2050,125,633,266,[609,266,105,44],3,1,50,1,1]],[3,3,318],[28,777,858,28],0,0,25]);
+    console.log(checksum); // → 25
+    ```
 
 - **Key 360** (`string`)
   - Value: `""`
