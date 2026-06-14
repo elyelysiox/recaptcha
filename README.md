@@ -471,32 +471,39 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 ]
 ```
 
+
+
 ### Signals
 
 - **Idx 4** (`string`)
-  - Value: `_website key_ + '6d'`
+  - Value: `3ccb`
   - Hashed: `true`
-  - Description: Website Key hashed with SHA-256 (truncated)
+  - Description: Generates an HMAC key from `window.localStorage.getItem("rc::a
+") + "6d"` converted to bytes, calculates `HMAC-SHA256(siteKey)` with that key, and returns the first 4 hexadecimal characters of the result.
+
+    The value of `rc::a` is a randomly generated base64.
 
 - **Idx 5** (`integer`)
   - Value: `window.localStorage.length * 2`
   - Hashed: `false`
-  - Description: `window.localStorage` length
+  - Description:`window.localStorage` length multiplied by 2
 
 - **Idx 16** (`string`)
   - Value: `yM5Us/j/fn6EDgtmPlP4Pxj605nMJN9dRYHyy5Mn`
   - Hashed: `true`
-  - Description: Hashed all `<HEAD>` elements, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/hashHeadElements.js)
+  - Description: 40-char base64 Bloom filter fingerprint of all `<HEAD>` nodes. Walks each child element collecting tag names, attributes, and text content, serialized and run through a djb2 hash.
+
+    Each digest is fed into a `BitHash(240 bits, 7 rounds, max 25 nodes)` that sets bits across a 40×6 grid, then encodes each 6-bit segment as a base64 char. reCAPTCHA's own script tags are excluded via a dynamic regex on src.
 
 - **Idx 27** (`string`)
   - Value: `location.origin`
   - Hashed: `false`
-  - Description: Website URL
+  - Description: Website URL.
 
 - **Idx 28** (`boolean`)
   - Value: `false`
   - Hashed: `false`
-  - Description: `window.parent != window` and `window.frameElement != null` checks
+  - Description: `window.parent != window ? true : window.frameElement != null ? true : false`
 
 - **Idx 29** (`string`)
   - Value: `e2a3cd70`
@@ -506,7 +513,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 30** (`integer`)
   - Value: `0`
   - Hashed: `false`
-  - Description: The index script containing the load URL `https://www.gstatic.com/recaptcha/releases/<version>/`, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/getRecaptchaScriptIndex.js)
+  - Description: The index script containing the reCAPTCHA Script `https://www.gstatic.com/recaptcha/releases/<version>/`, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/getRecaptchaScriptIndex.js)
 
 - **Idx 31** (`string`)
   - Value: `AAgkAQI0SB`
@@ -516,7 +523,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 32** (`string`)
   - Value: `""`
   - Hashed: `false`
-  - Description: Referrer URL `document.referrer`
+  - Description: Referrer URL `document.referrer`.
 
 - **Idx 33** (`integer`)
   - Value: `2`
@@ -554,7 +561,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 36** (`string`)
   - Value: `h3`, `h2` or `http/1.1`
   - Hashed: `false`
-  - Description: `nextHopProtocol` of `PerformanceNavigationTiming`
+  - Description: `nextHopProtocol` of navigation performance `performance.getEntriesByType("navigation")[0].nextHopProtocol`
 
 - **Idx 37** (`integer`)
   - Value: `-1`
@@ -574,12 +581,12 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 40** (`integer`)
   - Value: `0`
   - Hashed: `false`
-  - Description: Last scroll-Y position `window.scrollY`
+  - Description: Last scroll-Y position `window.scrollY` or `document.defaultView.pageYOffset`
 
 - **Idx 41** (`string`)
   - Value: `DIV,a08cd360`
   - Hashed: `true`
-  - Description: The hovered element where the mouse is positioned, hashed tagName, classNames and id, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/computeHoveredElement.js)
+  - Description: The `:hover` element where the mouse was positioned at that same moment, get the last element and hash tagName, classNames and id, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/computeHoveredElement.js)
 
 - **Idx 42** (`string`)
   - Value: `9,e3b0c442`
@@ -589,10 +596,14 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 44** (`string`)
   - Value: `2v591z63wq`
   - Hashed: `true`
-  - Description: Hovered element, `document.activeElement`, all `<INPUT>` elements hashed, `location.url`, `window.scrollY`, Example:
+  - Description: `:hover` element, `document.activeElement`, all `<INPUT>` elements hashed, `location.url`, `window.scrollY`, Example:
+  - 
     ```javascript
-    [
-        deriveSignalCode(hash(hoveredElement)),
+    const element = document.querySelectorAll(":hover");
+    const current = element[element.length - 1];
+    
+    const result = [
+        deriveSignalCode(hash(current)),
         deriveSignalCode(hash(document.activeElement)),
         deriveSignalCode(hash(document.querySelectorAll('input'))),
         deriveSignalCode(location.url),
@@ -603,37 +614,53 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 45** (`integer`)
   - Value: `4`
   - Hashed: `false`
-  - Description: Length of `window.history`
+  - Description: Length of `window.history`.
 
 - **Idx 46** (`string`)
   - Value: `https://static.kogstatic.com/0000/34c...`
   - Hashed: `false`
-  - Description: An error occurred in a website script
+  - Description: An error occurred in a script on the page and the `line:column` where it happened.
 
 - **Idx 47** (`integer`)
   - Value: `0`
   - Hashed: `false`
-  - Description: `window.length`
+  - Description: `window.getSelection().length || 0`
 
 - **Idx 49** (`string`)
   - Value: `h2-0`
   - Hashed: `false`
-  - Description: `nextHopProtocol` of `PerformanceResourceTiming`
+  - Description: Find the Performance Resource Timing entry for the reCAPTCHA script, get its `nextHopProtocol`, and determine whether its `duration` is zero. Return the result in the format `protocol-isZero`, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/recaptchaResourceTiming.js)
 
 - **Idx 50** (`array`)
   - Value: `[1,0,null,1,1,["805b1z63wq"],"MWc2MzZwMnR0ZHNkMw==",0,null,[[1]]]`
   - Hashed: `true`
-  - Description: Contains user behaviors, hashed hovered elements interactions, and timeout to capture another element
+  - Description: Contains user behaviors, hashed `:hover` elements and a timeout that increments each time another `:hover` element is collected. It analyzes user activations to accumulate the number of times the user has interacted with or is still present on the page by calculating `(10 * IsActive + IsBeenActive)`
+
+     *Base Format*:
+     ```
+     [
+        count,
+        timeout,
+        null,
+        timeoutMultiplier,
+        transitionCount,
+        [ elementsHoverHashed ],
+        sessionId,
+        userActivationScore,
+        null,
+        [ [ flags ] ]
+     ]
+     ```
 
 - **Idx 51** (`array`)
   - Value: `[0]`
   - Hashed: `false`
-  - Description: `document.innerText` text contains anything labeled `try again` | `incorrect` | `invalid` | `declined`
+  - Description: Search `document.body.innerText` for matches with the words "try again", "incorrect", "invalid", or "declined" and return the total number of matches found. Otherwise return 0, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/pageErrorKeywordCouint.js)
 
 - **Idx 52** (`integer`)
   - Value: `11`
   - Hashed: `false`
-  - Description: `isActive * 10 + hasBeenActive` from `navigator.userActivation`
+  - Description: `10 * navigator.userActivation.isActive + navigator.userActivation.hasBeenActive`
 
 - **Idx 53** (`integer`)
   - Value: `4`
@@ -648,22 +675,27 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 55** (`array`)
   - Value: `[[[1,"2v"],[1,"9z"],[1,"z8"],[1,"us"],[1,..`
   - Hashed: `false`
-  - Description: Ordering of generated signals codes by fingerprint values
+  - Description: Ordering of generated signals codes by fingerprint values.
 
 - **Idx 56** (`string`)
   - Value: `-1,-1`
   - Hashed: `false`
-  - Description: `window.opener` checks
+  - Description: `window.opener` checks, returns "-1,-1" if null.
 
 - **Idx 57** (`string`)
   - Value: `www.gstatic.com,_,static.kogstatic.com,www.google.com,www.googletagmanager.,...`
   - Hashed: `false`
-  - Description: HTML links of `document.scripts`
+  - Description: Collects the hosts from the src of all elements `<SCRIPT>` presented in `document.scripts`, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/collectScriptHostsSrc.js)
+
+    For each `<SCRIPT>`
+      If the element has the src attribute (hasAttribute("src")), the value of src is taken and parsed with a URI-type regex (`nd`), extracting only the host component (capture group 3 of the regex).
+  
+      If the `<SCRIPT>` does not have a src attribute (it is an inline script), the placeholder "_" is used.
 
 - **Idx 58** (`string`)
   - Value: `mapslitepromosdismissed1`
   - Hashed: `false`
-  - Description: Sampled `window.localStorage` key
+  - Description: Sampled `window.localStorage` key.
 
 - **Idx 59** (`string`)
   - Value: `""`
@@ -673,7 +705,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 60** (`string`)
   - Value: `https://www.kogama.com,https://www.google.com,https://js.stripe.com`
   - Hashed: `false`
-  - Description: URLs for open message events
+  - Description: URLs for open message events, [Example](https://github.com/elyelysiox/recaptcha/blob/main/pageMessageUrls.js)
 
 - **Idx 61** (`array`)
   - Value: `[0,"AAAAAAAAAA","AAAAAAAAAA"]`
@@ -683,67 +715,80 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 62** (`string`)
   - Value: `document.title`
   - Hashed: `false`
-  - Description: Full website title
+  - Description: Full website title.
 
 - **Idx 63** (`array`)
   - Value: `[]`
-  - Hashed: `true`
-  - Description: Hashed long IDs of `document.cookie`, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/derirveCookies.js)
+  - Hashed: `false`
+  - Description: Extract timestamps (12-13 digit numbers starting with 1[2-9], typical of epoch millis ~2008-2099) from the cookie values, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/derirveCookies.js)
+
+    Accumulate the following values ​​over all the found IDs: count, min, max, and average.
+    The final value result is an array `[count, min, max, avg]`
 
 - **Idx 64** (`integer`)
   - Value: `55557`
   - Hashed: `false`
-  - Description: Time elapsed from the anchor to the reload
+  - Description: Execution time (from the anchor to the reload).
 
 - **Idx 65** (`string`)
   - Value: `sha384-3qc`
   - Hashed: `true`
-  - Description: Integrity hash of render script (truncated)
+  - Description: Integrity of reCAPTHCA script configured in `https://www.google.com/recaptcha/api.js?render=` (truncated to 10 characters)
 
 - **Idx 67** (`array`)
-  - Value: `[width,height,outerHeight,innerWidth,innerHeight,availHeight]`
+  - Value: `[screen.width, screen.height, screen.availHeight, window.innerWidth, window.innerHeight, window.outerHeight]`
   - Hashed: `false`
-  - Description: Screen resolution and dimensions
+  - Description: Screen resolution, width and height of browser viewport and browser window height.
 
 - **Idx 68** (`array`)
   - Value: `[300,null,1777685870223]`
   - Hashed: `false`
-  - Description: Timezone offset and current Unix timestamp
+  - Description: Timezone offset and current Unix timestamp `[new Date().getTimezoneOffset(), null, Date.now()]`
 
 - **Idx 69** (`string`)
   - Value: `09AKhCRwjrDFiHsrRA--o23-HB-eWqOtk_XQ-rLE1...`
   - Hashed: `false`
-  - Description: A session token used for human identification, stored in the browser cookies and increments the score if valid
+  - Description: A session token used for human identification, stored in the browser cookies and increments the score if valid.
 
 - **Idx 70** (`array`)
   - Value: `[null,null,"","",null,"1l0fl"]`
   - Hashed: `false`
-  - Description: Website Product Prices, Data, etc
+  - Description: Extract total monetary amounts (such as `Total: $50.00` or `Total 150.00 EUR`) from `document.innerText` by searching for the currency symbol or code along with the numerical amount using the regular expression:
 
+    ```
+    total[\S\s]{0,20}?(((R\$|\$|€|£|USD|EUR)\s*[\d\.,]+)|[\d\.,]+\s*(€|USD|EUR))`
+    ```
+  
+    `total` → Searches for the exact word "total"
+    
+    `[\S\s]{0,20}?` → Searches between \(0\) and \(20\) for intervening characters (such as spaces, colons, or line breaks) before finding the number
+    
+    `(((R\$|\$|€|£|USD|EUR)\s*[\d\.,]+)|[\d\.,]+\s*(€|USD|EUR))` → This is the main block that captures the money and is divided into two separate options
+  
 - **Idx 71** (`array`)
   - Value: `[jsHeapSizeLimit,usedJSHeapSize,totalJSHeapSize]`
   - Hashed: `false`
-  - Description: Performance JavaScript heap memory
+  - Description: Performance JavaScript HEAP memory.
 
 - **Idx 72** (`array`)
   - Value: `[[["Google Chrome","147"],["Not.A/Brand",...`
   - Hashed: `false`
-  - Description: `userAgentData`, Browser/Chromium version and name
+  - Description: `userAgentData`, Browser/Chromium version and name.
 
 - **Idx 73** (`array`)
   - Value: `[[null,2,0,"Mozilla/5.0 (Windows NT 10.0;...`
   - Hashed: `false`
-  - Description: VM Signals data
+  - Description: VM Encrypted Signals.
 
-- **Idx 77** (`string`)
-  - Value: `null`
-  - Hashed: `false`
-  - Description: Google GA cookie, may appear if the website uses Google Tag Manager
-
-- **Idx 78** (`integer`)
+- **Idx 77** (`integer`)
   - Value: `""`
   - Hashed: `false`
-  - Description: Unix timestamp, sometimes it appears
+  - Description: Unix timestamp, sometimes it appears.
+
+- **Idx 78** (`string`)
+  - Value: `null`
+  - Hashed: `false`
+  - Description: Google GA cookie, may appear if the website uses Google Tag Manager.
 
 ## VM Signals
 The following are the browser values ​​obtained by the internal reCAPTCHA VM, along with the signal key. Some values ​​are not shown in the sample fingerprint because the VM only extracts certain values ​​from the configuration bytecode. Therefore, other values ​​will be displayed. For more details, see [here](https://github.com/elyelysiox/recaptcha-vm)
