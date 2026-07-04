@@ -1,35 +1,3 @@
-
-# Nstproxy
-### Reliable Proxy Infrastructure for Modern Automation Workflows
-
-<p align="center">
-  <img src="./assets/nstproxy.jpg" />
-</p>
-
-Nstproxy provides enterprise-grade residential and datacenter proxy infrastructure designed for browser automation, large-scale data collection, and high-volume scraping workflows.
-
-## ✨ Why Developers Choose Nstproxy?
-
-- 110M+ Residential & ISP IPs Worldwide
-- Smart Rotation & Sticky Sessions
-- Optimized for Modern Anti-Bot Systems
-- Built for Puppeteer, Playwright & Selenium
-- Scalable Infrastructure for Automation
-- Starting from $0.1/GB
-
-[Nstproxy](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox) helps developers maintain reliable automation workflows with high-quality residential proxy infrastructure built for modern web environments.
-
-👉 Learn more: [Nstproxy Official](https://www.nstproxy.com/?utm_source=github&utm_medium=elyelysiox)
-
-- Telegram: https://t.me/nstproxy
-- Discord: https://discord.gg/5jjWCAmvng
-
-## 🎁 Discount
-
-Use code: `ELYELYSIOX` to get **10% OFF**
-
----
-
 ## Description
 
 This repository contains a technical analysis of Google's antibot (reCAPTCHA) focusing on:
@@ -493,6 +461,11 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 
     Each digest is fed into a `BitHash(240 bits, 7 rounds, max 25 nodes)` that sets bits across a 40×6 grid, then encodes each 6-bit segment as a base64 char. reCAPTCHA's own script tags are excluded via a dynamic regex on src.
 
+- **Idx 17** (`integer`)
+  - Value: `2`
+  - Hashed: `false`
+  - Description: Check if there is access to store/read third-party cookies, [Sample]([https://github.com/elyelysiox/recaptcha/blob/main/hashGrecaptchaThenBody.js](https://github.com/elyelysiox/recaptcha/blob/main/hasStorageAccess.js))
+
 - **Idx 18** (`string`)
   - Value: `a2hyNTFuNDI4NnA3`
   - Hashed: `false`
@@ -685,7 +658,7 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 56** (`string`)
   - Value: `-1,-1`
   - Hashed: `false`
-  - Description: `window.opener` checks, returns "-1,-1" if null.
+  - Description: `window.opener` checks, returns "-1,-1" if null, [Sample](https://github.com/elyelysiox/recaptcha/blob/main/windowOpenerCheck.js)
 
 - **Idx 57** (`string`)
   - Value: `www.gstatic.com,_,static.kogstatic.com,www.google.com,www.googletagmanager.,...`
@@ -758,7 +731,9 @@ value -> "[[[1,\"wg\"],..." seed code -> 85 key -> 1789
 - **Idx 70** (`array`)
   - Value: `[null,null,"","",null,"1l0fl"]`
   - Hashed: `false`
-  - Description: Extract total monetary amounts (such as `Total: $50.00` or `Total 150.00 EUR`) from `document.innerText` by searching for the currency symbol or code along with the numerical amount using the regular expression:
+  - Description: Extract total monetary amounts (such as `Total: $50.00` or `Total 150.00 EUR`), [Sample](https://github.com/elyelysiox/recaptcha/blob/main/monentaryAmountsArray.js)
+  
+    from `document.innerText` by searching for the currency symbol or code along with the numerical amount using the regular expression:
 
     ```
     total[\S\s]{0,20}?(((R\$|\$|€|£|USD|EUR)\s*[\d\.,]+)|[\d\.,]+\s*(€|USD|EUR))`
